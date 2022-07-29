@@ -2,19 +2,12 @@ mod map;
 mod widget;
 
 use super::core;
-use super::temp;
 use crate::common::url;
 use crate::prelude::*;
 use clap::Args;
 use clap::Parser;
 
-const FUNC_POSSIBLE_VALUES: &[&str] = &[
-    "url::open",
-    "welcome",
-    "widget::last_command",
-    "map::expand",
-    "temp",
-];
+const FUNC_POSSIBLE_VALUES: &[&str] = &["url::open", "welcome", "widget::last_command", "map::expand"];
 
 impl FromStr for Func {
     type Err = &'static str;
@@ -25,7 +18,6 @@ impl FromStr for Func {
             "welcome" => Ok(Func::Welcome),
             "widget::last_command" => Ok(Func::WidgetLastCommand),
             "map::expand" => Ok(Func::MapExpand),
-            "temp" => Ok(Func::Temp),
             _ => Err("no match"),
         }
     }
@@ -37,7 +29,6 @@ pub enum Func {
     Welcome,
     WidgetLastCommand,
     MapExpand,
-    Temp,
 }
 
 #[derive(Debug, Clone, Args)]
@@ -59,7 +50,6 @@ impl Runnable for Input {
             Func::Welcome => core::main(),
             Func::WidgetLastCommand => widget::last_command(),
             Func::MapExpand => map::expand(),
-            Func::Temp => temp::main(),
         }
     }
 }

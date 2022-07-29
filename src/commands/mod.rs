@@ -2,9 +2,9 @@ pub mod core;
 pub mod func;
 pub mod info;
 pub mod preview;
+pub mod raycast;
 pub mod repo;
 pub mod shell;
-pub mod temp;
 
 use crate::commands;
 use crate::prelude::*;
@@ -21,6 +21,8 @@ pub fn handle() -> Result<()> {
             PreviewVarStdin(input) => input.run(),
 
             PreviewVar(input) => input.run(),
+
+            Raycast(input) => input.run(),
 
             Widget(input) => input.run().context("Failed to print shell widget code"),
 

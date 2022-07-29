@@ -1,21 +1,17 @@
 use crate::commands::core::get_fetcher;
 use crate::common::shell::{self, ShellSpawnError};
-use crate::finder::structures::Opts as FinderOpts;
 use crate::parser::Parser;
 use crate::{prelude::*, serializer};
+use clap::{Args, Subcommand};
 use std::io::{self, Write};
 
-pub fn main() -> Result<()> {
-    let config = &CONFIG;
-    let _opts = FinderOpts::snippet_default();
-
+pub fn handle_var(hash: u64) -> Result<()> {
     let fetcher = get_fetcher()?;
-    let hash: u64 = 2087294461664323320;
+    // let hash: u64 = 2087294461664323320;
 
     let mut buf = vec![];
     let mut parser = Parser::new(&mut buf, false);
     parser.set_hash(hash);
-
     let _res = fetcher
         .fetch(&mut parser)
         .context("Failed to parse variables intended for finder")?;
@@ -48,9 +44,7 @@ pub fn main() -> Result<()> {
     Ok(())
 }
 
-pub fn _main0() -> Result<()> {
-    let config = &CONFIG;
-
+pub fn handle_list() -> Result<()> {
     let fetcher = get_fetcher()?;
 
     let mut stdout = io::stdout();
@@ -62,4 +56,27 @@ pub fn _main0() -> Result<()> {
         .context("Failed to parse variables intended for finder")?;
 
     Ok(())
+}
+
+#[derive(Debug, Clone, Subcommand)]
+pub enum Subcmd {
+    List,
+    Var { hash: u64 },
+}
+
+#[derive(Debug, Clone, Args)]
+pub struct Input {
+    #[clap(subcommand)]
+    pub subcmd: Subcmd,
+}
+
+impl Runnable for Input {
+    fn run(&self) -> Result<()> {
+        use Subcmd::*;
+        match self.subcmd {
+            List => handle_list()?,
+            Var { hash } => handle_var(hash)?,
+        }
+        Ok(())
+    }
 }

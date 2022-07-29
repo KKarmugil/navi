@@ -114,6 +114,8 @@ pub enum Command {
     Widget(commands::shell::Input),
     /// Shows info
     Info(commands::info::Input),
+    /// Raycast
+    Raycast(commands::raycast::Input),
 }
 
 pub enum Source {
